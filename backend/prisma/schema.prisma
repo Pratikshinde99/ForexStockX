@@ -1,0 +1,68 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(uuid())
+  name          String
+  email         String   @unique
+  passwordHash  String   @map("password_hash")
+  createdAt     DateTime @default(now()) @map("created_at")
+  
+  wallet        Wallet?
+  currencyExchanges CurrencyExchangeHistory[]
+  stockInvestments  StockInvestmentHistory[]
+  
+  @@map("users")
+}
+
+model Wallet {
+  id              String   @id @default(uuid())
+  userId          String   @unique @map("user_id")
+  inrBalance      Float    @default(100000.00) @map("inr_balance")
+  foreignBalances Json     @default("{}") @map("foreign_balances")
+  
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("wallets")
+}
+
+model CurrencyExchangeHistory {
+  id               String   @id @default(uuid())
+  userId           String   @map("user_id")
+  inrAmount        Float    @map("inr_amount")
+  targetCurrency   String   @map("target_currency")
+  exchangeRate     Float    @map("exchange_rate")
+  foreignAmount    Float    @map("foreign_amount")
+  remainingBalance Float    @map("remaining_balance")
+  timestamp        DateTime @default(now())
+  
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("currency_exchange_history")
+  @@index([userId])
+}
+
+model StockInvestmentHistory {
+  id                String   @id @default(uuid())
+  userId            String   @map("user_id")
+  stockName         String   @map("stock_name")
+  symbol            String
+  priceAtInvestment Float    @map("price_at_investment")
+  amount            Float
+  prediction        String   @default("Neutral")
+  timestamp         DateTime @default(now())
+  
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("stock_investment_history")
+  @@index([userId])
+}
