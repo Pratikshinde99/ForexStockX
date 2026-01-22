@@ -56,7 +56,7 @@ app.use((err, req, res, next) => {
 });
 
 // Start server
-app.listen(config.port, () => {
+const server = app.listen(config.port, () => {
     console.log(`
 ╔════════════════════════════════════════════════════════════╗
 ║                                                            ║
@@ -82,6 +82,18 @@ app.listen(config.port, () => {
 ║                                                            ║
 ╚════════════════════════════════════════════════════════════╝
   `);
+});
+
+server.on('error', (err) => {
+    // Handle common startup errors with a clear message instead of an unhandled exception
+    if (err?.code === 'EADDRINUSE') {
+        console.error(`FATAL ERROR: Port ${config.port} is already in use.`);
+        console.error(`Tip: set PORT to a free port, e.g. PORT=5001, then restart the server.`);
+        process.exit(1);
+    }
+
+    console.error('FATAL ERROR: Failed to start server:', err);
+    process.exit(1);
 });
 
 export default app;
