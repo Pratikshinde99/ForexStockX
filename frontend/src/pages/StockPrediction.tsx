@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api from '../utils/api';
 import { formatCurrency } from '../utils/helpers';
 import { useAuth } from '../contexts/AuthContext';
@@ -13,7 +14,8 @@ import {
     CheckCircle2,
     ShieldCheck,
     Loader2,
-    ArrowUpRight
+    ArrowUpRight,
+    History as HistoryIcon
 } from 'lucide-react';
 
 interface Stock {
@@ -37,6 +39,7 @@ interface Stock {
 
 const StockPrediction: React.FC = () => {
     const { user, refreshUser } = useAuth();
+    const navigate = useNavigate();
     const [stocks, setStocks] = useState<Stock[]>([]);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
@@ -121,15 +124,24 @@ const StockPrediction: React.FC = () => {
                     <p className="text-slate-400 mt-2">AI-driven market insights and high-growth opportunities</p>
                 </div>
 
-                <div className="relative w-full md:w-96 animate-fade-in">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
-                    <input
-                        type="text"
-                        placeholder="Search stocks or industries..."
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                        className="w-full bg-slate-900 border-2 border-slate-800 rounded-2xl py-4 pl-12 pr-4 text-white focus:border-primary-500 transition-all outline-none shadow-lg"
-                    />
+                <div className="flex flex-col md:flex-row items-center gap-4 animate-fade-in">
+                    <button
+                        onClick={() => navigate('/history/stocks')}
+                        className="flex items-center space-x-2 text-primary-400 hover:text-primary-300 font-bold text-xs uppercase tracking-widest"
+                    >
+                        <HistoryIcon className="w-4 h-4" />
+                        <span>View History</span>
+                    </button>
+                    <div className="relative w-full md:w-80">
+                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                        <input
+                            type="text"
+                            placeholder="Search stocks..."
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                            className="w-full bg-slate-900 border-2 border-slate-800 rounded-xl py-3 pl-11 pr-4 text-sm text-white focus:border-primary-500 transition-all outline-none"
+                        />
+                    </div>
                 </div>
             </div>
 
@@ -159,7 +171,7 @@ const StockPrediction: React.FC = () => {
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center space-x-4">
                                         <div className={`w-12 h-12 rounded-xl flex items-center justify-center font-bold text-lg ${stock.prediction === 'Up' ? 'bg-green-500/10 text-green-500' :
-                                                stock.prediction === 'Down' ? 'bg-red-500/10 text-red-500' : 'bg-slate-700/50 text-slate-400'
+                                            stock.prediction === 'Down' ? 'bg-red-500/10 text-red-500' : 'bg-slate-700/50 text-slate-400'
                                             }`}>
                                             {stock.symbol.charAt(0)}
                                         </div>
