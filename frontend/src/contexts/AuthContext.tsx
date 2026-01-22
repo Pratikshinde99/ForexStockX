@@ -1,11 +1,19 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 import api from '../utils/api';
+
+interface Wallet {
+    inrBalance: number;
+    foreignBalances: Record<string, number>;
+    totalInvested: number;
+    currentInvestmentValue: number;
+}
 
 interface User {
     id: string;
     name: string;
     email: string;
     createdAt: string;
+    wallet?: Wallet;
 }
 
 interface AuthContextType {

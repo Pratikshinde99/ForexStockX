@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import api from '../utils/api';
-import { formatCurrency, formatNumber, formatDate } from '../utils/helpers';
-import BackButton from '../components/BackButton';
+import { formatCurrency, formatNumber } from '../utils/helpers';
 import {
     IndianRupee,
     TrendingUp,

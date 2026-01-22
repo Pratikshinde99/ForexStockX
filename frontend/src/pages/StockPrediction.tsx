@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import api from '../utils/api';
-import { formatCurrency, formatDate } from '../utils/helpers';
+import { formatCurrency } from '../utils/helpers';
 import { useAuth } from '../contexts/AuthContext';
 import BackButton from '../components/BackButton';
 import {
@@ -9,7 +9,6 @@ import {
     Search,
     Briefcase,
     Target,
-    Clock,
     AlertTriangle,
     CheckCircle2,
     ShieldCheck,
@@ -45,9 +44,6 @@ const StockPrediction: React.FC = () => {
     const [amount, setAmount] = useState('');
     const [isInvesting, setIsInvesting] = useState(false);
     const [status, setStatus] = useState<{ type: 'success' | 'error' | null, message: string }>({ type: null, message: '' });
-
-    // For live price movement effect
-    const prevPrices = useRef<{ [key: string]: number }>({});
 
     const fetchStocks = async () => {
         try {
